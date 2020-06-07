@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b054b1c16e258d2b154b5109853527cefb6bd12371db1e0a491bcdf240b4b688
+-- hash: 4fb18a5e6c5f2443266c6302040f0833481a41faadb42e9292314c6113191c10
 
 name:           genalg
 version:        0.1.0.0
@@ -34,6 +34,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , random
   default-language: Haskell2010
 
 executable genalg-exe
@@ -46,6 +47,7 @@ executable genalg-exe
   build-depends:
       base >=4.7 && <5
     , genalg
+    , random
   default-language: Haskell2010
 
 test-suite genalg-test
@@ -59,4 +61,5 @@ test-suite genalg-test
   build-depends:
       base >=4.7 && <5
     , genalg
+    , random
   default-language: Haskell2010
