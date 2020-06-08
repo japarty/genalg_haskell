@@ -6,8 +6,7 @@ module Lib
     , someFunc
     ) where
 
-
---import System.Random
+--import System.Random (randomR)
 
 
 data Ind =
@@ -30,7 +29,7 @@ data Pop =
 genPop :: Int -> Int -> Pop
 genPop s r = Pop s fs
     where
-        fs = [genInd s | x <- [1..s]]
+        fs = [genInd r | x <- [1..s]]
 
 genInd :: Int -> Ind
 genInd s = Ind fs 0
@@ -44,6 +43,14 @@ genInd s = Ind fs 0
 --selekcja rankingowa,
 --selection :: Pop -> Pop
 
+--for i in range(populacja):
+--    a = losowy pierwszy woj
+--    b = losowy drugi woj
+--    if a_fit>b_fit:
+--        append_nowa_pop(a)
+--    else:
+--        append_nowa_pop(b)
+
 --TODO: krzyżowanie
 --crossing :: Float -> Pop -> Pop
 
@@ -53,7 +60,6 @@ genInd s = Ind fs 0
 
 
 
-
-
+--x = getStdRandom (randomR (1,6))
 someFunc :: IO ()
 someFunc = putStrLn "Over"

@@ -5,7 +5,7 @@ import Lib
 main :: IO ()
 main = do
     putStrLn "Haskell genalg"
-    putStrLn "Podaj wyraz"
+    putStrLn "Add word to decipher"
     sWord <- getLine
     putStrLn "Size of population"
     sSize <- getLine
@@ -17,15 +17,11 @@ main = do
     sCrossChan <- getLine
     let size = read sSize :: Int
         gen = read sGen :: Int
---        mutchan = read sMutChan :: Float
---        crosschan = read sCrossChan :: Float
---        chromosomes = length sWord
---    genPop size chromosomes
-    putStrLn sWord
---    putStrLn gen
---    putStrLn mutchan
---    putStrLn crosschan
---    putStrLn chromosomes
+        mutchan = read sMutChan :: Float
+        crosschan = read sCrossChan :: Float
+        chromosomes = length sWord
+        pop = genPop size chromosomes
+    putStrLn $ show pop
     someFunc
 
 --TODO: sama funkcja algorytmu genetycznego (sklejenie powyższych funkcji tak, by było wykonywane)
