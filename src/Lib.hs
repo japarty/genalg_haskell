@@ -19,22 +19,31 @@ module Lib
     , wyciagnij
     , someFunc
     , genList
+    , genpop
    -- , randomList
     ) where
 
-
+import Data.List
 import Data.Char
 import System.Random
 
 
 --genList :: Int -> [Int]
 genList n = sequence $ replicate n $ randomRIO (1,32::Int)
---genpop :: Int -> Int -> [[Int]]
---genpop s r = [a | x <- [1..s], a <- genList r]
---geneList n = do (x <- genList n)
---    x
+posList n len = sequence $ replicate n $ randomRIO (0,len-1::Int)
+floatList n = sequence $ replicate n $ randomRIO (0,1::Float)
+--genpop s n = replicate s $ sequence $ replicate n $ randomRIO (1,32::Int)
+--genpop s n = replicate s x
+--  where 
+--    do 
+--      x <- genpop s n
 
-
+-- wszystkie są generowane tak samo, więc do naprawy, ale chcę robić inne funkcje już więc chwilowo zostawiam
+genpop s c = do
+  x <- genList c
+  let a = [x | _ <- [1..s]]
+  return a
+  
 -- | Zamiana stringow na liste intow
 -- = self explanatory, dziala na male i duze litery
 t2a :: [Char] -> [Int]
@@ -63,6 +72,13 @@ fitness (x:xs) (y:ys) = (abs(x-y)) + fitness xs ys
 mutacja :: [Int] -> Int -> Int -> [Int]
 mutacja xs y z = take y xs ++ [z] ++ (reverse(take ((length xs) - (y + 1)) (reverse xs)))
 
+mutwrap = do
+  mutlist <- floatList size
+  positionlist <- posList chromosomes 
+  newellist <- genList size
+  putStrLn $ show mutlist
+  putStrLn $ show positionlist
+  putStrLn $ show newellist
 
 -- | Mutacja osobnikow
 -- = Funkcja krzyzuje dwoch osobnikow w wyznaczonym miejscu

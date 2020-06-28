@@ -5,18 +5,9 @@ import System.Random
 
 main :: IO ()
 main = do
-
-    --gen <- newStdGen
-    
-    --take 1 $ randomRs (0, 10) gen
-    -- powinno wziąć 1 losowa liczbe z przedzialu 0-10
-
-    --print $ randomList 5 0 10 gen
-    -- powinno wygenerowac 5-elementowa, losowa liste z przedzialu 0-10
-    
     putStrLn "Algorytm genetyczny"
     
-    putStrLn "Podaj słowo docelowe: "
+    putStrLn "Podaj slowo docelowe: "
     sWord <- getLine
     putStrLn "Podaj rozmiar populacji: "
     sSize <- getLine
@@ -32,10 +23,16 @@ main = do
         mutchan = read sMutChan :: Float
         crosschan = read sCrossChan :: Float
         chromosomes = length sWord
-        --pop = genPop size chromosomes
-        
-    --putStrLn $ show pop
+        word = t2a sWord
+        ind = genList chromosomes
+    putStrLn $ show word
+    pop <- genpop size chromosomes
+    putStrLn $ show pop
+    let przyst = [fitness word x | x <- pop]
+    putStrLn $ show przyst
+
     someFunc
+
 
 -- tutaj musimy wygenrować populacje, wg podanych wyżej parametrow (liczba osobnikow, ilosc genow)
 
@@ -70,4 +67,11 @@ main = do
 
 
 --genalg ::
---genalg =
+genalg = do
+--  if sum [fitness word x | x <- pop] == 0:
+--    return pop
+--  else:
+    
+    let zipped = zip(pop,floatList)
+    
+--    pop = [ if x < 10 then "BOOM!" else "BANG!" | x <- zip(pop,floatList) ]
