@@ -32,27 +32,8 @@ main = do
     putStrLn $ show przyst
     pop <- genalg word pop mutchan size chromosomes
     putStrLn $ show pop
+    putStrLn $ show $ a2t $ pop !! 1
     someFunc
-
-
--- tutaj musimy wygenrować populacje, wg podanych wyżej parametrow (liczba osobnikow, ilosc genow)
-
--- potem, gdy juz ja bedziemy mieli - cos takiego: [[Int]], to jesli chcemy wywolywac funkcje na losowych osobnikach, to robimy tak: [[x]] !! y - gdzie y to jakas nasza wylosowana liczba oznaczajaca osobnika
-
--- bedziemy musieli takie liczby losowac do mutacji - zeby wylosowac osobnika, gen, ktory chcemy zmienic oraz na co ma on zostac zmieniony
-
--- oraz do krzyzowania, wtedy musimy wylosowac dwoch osobnikow oraz miejsce, w ktorym maja sie przeciac
-
--- nastepnie wywolujemy selekcje, ktora nam stwarza nowa populacje
-
--- i oceniamy przystosowanie osobnikow, jesli roznica miedzy jakims osobnikiem a naszym celem - podanym slowem wynosi 0 to zamykamy program, jesli nie to od nowa
-
--- to wszystko generealnie bedziemy musieli robic tu w mainie, korzystajac z pojedynczych funkcji z lib
-
-
-
-
-
 
 --TODO: sama funkcja algorytmu genetycznego (sklejenie powyższych funkcji tak, by było wykonywane)
 --OGÓLNY TEMPLATE
@@ -66,9 +47,13 @@ main = do
 --return
 --skonwertuj z ASCII na tekst
 
-
 --genalg ::
 genalg word pop mutchan size chromosomes =
   if sum [fitness word x | x <- pop] == 0
   then return pop
-  else do mutwrap pop mutchan size chromosomes
+  else do putStrLn $ show (sum [fitness word x | x <- pop])
+          pop <- mutWrap pop mutchan size chromosomes
+          pop <- selectWrap word pop size
+          return pop
+--          genalg word pop mutchan size cromosomes
+          
