@@ -21,6 +21,9 @@ module Lib
     , genList
     , genpop
    -- , randomList
+   , mutwrap
+   , posList
+   , floatList
     ) where
 
 import Data.List
@@ -29,7 +32,7 @@ import System.Random
 
 
 --genList :: Int -> [Int]
-genList n = sequence $ replicate n $ randomRIO (1,32::Int)
+genList n = sequence $ replicate n $ randomRIO (0,127::Int)
 posList n len = sequence $ replicate n $ randomRIO (0,len-1::Int)
 floatList n = sequence $ replicate n $ randomRIO (0,1::Float)
 --genpop s n = replicate s $ sequence $ replicate n $ randomRIO (1,32::Int)
@@ -48,14 +51,14 @@ genpop s c = do
 -- = self explanatory, dziala na male i duze litery
 t2a :: [Char] -> [Int]
 t2a [] = []
-t2a (x:xs) = [ord x - ord 'a'] ++ t2a xs
+t2a (x:xs) = [ord x] ++ t2a xs
 
 
 -- | Zamiana listy intow na stringi
 -- = self explanatory, dziala na male i duze litery
 a2t :: [Int] -> [Char]
 a2t [] = []
-a2t (x:xs) = [chr (ord 'a' + x)] ++ a2t xs
+a2t (x:xs) = [chr (x)] ++ a2t xs
 
 
 -- | Przystosowanie osobnika
@@ -63,7 +66,7 @@ a2t (x:xs) = [chr (ord 'a' + x)] ++ a2t xs
 -- == Funkcja pobiera dwie listy: pierwsza wzorcowa, a druga do porownania z nia, zwraca liczbe oznaczajaca sume "odleglosci" wszystkich miejsc w liscie porownywanej od wzorca
 fitness :: [Int] -> [Int] -> Int
 fitness [] [] = 0
-fitness (x:xs) (y:ys) = (abs(x-y)) + fitness xs ys
+fitness (x:xs) (y:ys) = abs (x - y) + fitness xs ys
 
 
 -- | Mutacja osobnika
@@ -72,13 +75,12 @@ fitness (x:xs) (y:ys) = (abs(x-y)) + fitness xs ys
 mutacja :: [Int] -> Int -> Int -> [Int]
 mutacja xs y z = take y xs ++ [z] ++ (reverse(take ((length xs) - (y + 1)) (reverse xs)))
 
-mutwrap = do
-  mutlist <- floatList size
-  positionlist <- posList chromosomes 
-  newellist <- genList size
-  putStrLn $ show mutlist
-  putStrLn $ show positionlist
-  putStrLn $ show newellist
+mutwrap pop mutchan size chromosomes = do mutlist <- floatList size
+                                          positionlist <- posList size chromosomes
+                                          newellist <- genList size
+                                          let ziplist = zip4 pop mutlist positionlist newellist
+                                              x = [if b<mutchan then mutacja a c d else a | (a,b,c,d) <- ziplist]
+                                          return x
 
 -- | Mutacja osobnikow
 -- = Funkcja krzyzuje dwoch osobnikow w wyznaczonym miejscu

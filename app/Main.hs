@@ -30,7 +30,8 @@ main = do
     putStrLn $ show pop
     let przyst = [fitness word x | x <- pop]
     putStrLn $ show przyst
-
+    pop <- genalg word pop mutchan size chromosomes
+    putStrLn $ show pop
     someFunc
 
 
@@ -67,11 +68,7 @@ main = do
 
 
 --genalg ::
-genalg = do
---  if sum [fitness word x | x <- pop] == 0:
---    return pop
---  else:
-    
-    let zipped = zip(pop,floatList)
-    
---    pop = [ if x < 10 then "BOOM!" else "BANG!" | x <- zip(pop,floatList) ]
+genalg word pop mutchan size chromosomes =
+  if sum [fitness word x | x <- pop] == 0
+  then return pop
+  else do mutwrap pop mutchan size chromosomes
