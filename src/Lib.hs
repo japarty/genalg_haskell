@@ -41,16 +41,12 @@ tourList n = sequence $ replicate n $ randomRIO (0,n-1::Int)
 
 -- wszystkie są generowane tak samo, więc do naprawy, ale chcę robić inne funkcje już więc chwilowo zostawiam
 genpop :: Int -> Int -> IO [[Int]]
-genpop s c = do
-  x <- genList c
-  let a = [x | _ <- [1..s]]
-  return a
-
---
---genpop pop 0 _ = []
---genpop pop s c = do x <- genList c
---                 let pop = pop ++ [x]
---                 return (genpop pop (s-1) c)
+genpop s c = if s==1
+                then do x <- genList c
+                        return [x]
+                else do x <- genList c
+                        xs <- genpop (s-1) c
+                        return (x:xs)
   
 -- | Zamiana stringow na liste intow
 -- = self explanatory, dziala na male i duze litery
@@ -60,7 +56,7 @@ t2a (x:xs) = [ord x] ++ t2a xs
 
 
 -- | Zamiana listy intow na stringi
--- * self explanatory, dziala na male i duze litery
+-- = self explanatory, dziala na male i duze litery
 a2t :: [Int] -> [Char]
 a2t [] = []
 a2t (x:xs) = [chr x] ++ a2t xs
@@ -109,7 +105,7 @@ crossWrap :: [[Int]] -> Float -> Int -> [Int] -> [Float] -> [[Int]]
 crossWrap [] _ _ _ _ = []
 crossWrap _ _ _ [] _ = []
 crossWrap _ _ _ _ [] = []
-crossWrap (p1:p2:pt) crosschan size (c:ct) (cc:cct) | cc < crosschan = do [crossOut (cross p1 p2 c) 0] ++ [crossOut (cross p1 p2 c) 1] ++ crossWrap pt crosschan size ct cct
+crossWrap (p1:p2:pt) crosschan size (c:ct) (cc:cct) | cc < crosschan = [crossOut (cross p1 p2 c) 0] ++ [crossOut (cross p1 p2 c) 1] ++ crossWrap pt crosschan size ct cct
                                                     | otherwise = [p1] ++ [p2] ++ crossWrap pt crosschan size ct cct
 
 crossDWrap :: [[Int]] -> Float -> Int -> Int -> IO [[Int]]
