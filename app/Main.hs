@@ -19,19 +19,15 @@ main = do
     sCrossChan <- getLine
     
     let size = read sSize :: Int
-        geny = read sGen :: Int
+        gen = read sGen :: Int
         mutchan = read sMutChan :: Float
         crosschan = read sCrossChan :: Float
         chromosomes = length sWord
         word = t2a sWord
         ind = genList chromosomes
-    putStrLn $ show word
     pop <- genpop size chromosomes
-    putStrLn $ show pop
     let przyst = [fitness word x | x <- pop]
-    putStrLn $ show przyst
-    pop <- genalg word pop mutchan size chromosomes
-    putStrLn $ show pop
+    pop <- genalg 1 word pop mutchan size crosschan chromosomes gen
     putStrLn $ show $ a2t $ pop !! 1
     someFunc
 
@@ -47,13 +43,14 @@ main = do
 --return
 --skonwertuj z ASCII na tekst
 
---genalg ::
-genalg word pop mutchan size chromosomes =
-  if sum [fitness word x | x <- pop] == 0
+genalg :: Int -> [Int] -> [[Int]] -> Float -> Int -> Float -> Int -> Int -> IO [[Int]]
+genalg i word pop mutchan size crosschan chromosomes gen =
+  if sum [fitness word x | x <- pop] == 0 || i>gen
   then return pop
   else do putStrLn $ show (sum [fitness word x | x <- pop])
           pop <- mutWrap pop mutchan size chromosomes
           pop <- selectWrap word pop size
-          return pop
---          genalg word pop mutchan size cromosomes
+          pop <- crossDWrap pop crosschan chromosomes size
+--          return pop
+          genalg (i+1) word pop mutchan size crosschan chromosomes gen
           

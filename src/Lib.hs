@@ -26,6 +26,8 @@ module Lib
     , floatList
     , tourList
     , selectWrap
+    , crossWrap
+    , crossDWrap
     ) where
 
 import Data.List
@@ -38,10 +40,17 @@ floatList n = sequence $ replicate n $ randomRIO (0,1::Float)
 tourList n = sequence $ replicate n $ randomRIO (0,n-1::Int)
 
 -- wszystkie są generowane tak samo, więc do naprawy, ale chcę robić inne funkcje już więc chwilowo zostawiam
+genpop :: Int -> Int -> IO [[Int]]
 genpop s c = do
   x <- genList c
   let a = [x | _ <- [1..s]]
   return a
+
+--
+--genpop pop 0 _ = []
+--genpop pop s c = do x <- genList c
+--                 let pop = pop ++ [x]
+--                 return (genpop pop (s-1) c)
   
 -- | Zamiana stringow na liste intow
 -- = self explanatory, dziala na male i duze litery
@@ -51,7 +60,7 @@ t2a (x:xs) = [ord x] ++ t2a xs
 
 
 -- | Zamiana listy intow na stringi
--- = self explanatory, dziala na male i duze litery
+-- * self explanatory, dziala na male i duze litery
 a2t :: [Int] -> [Char]
 a2t [] = []
 a2t (x:xs) = [chr x] ++ a2t xs
@@ -73,6 +82,7 @@ fitness (x:xs) (y:ys) = abs (x - y) + fitness xs ys
 mute :: [Int] -> Int -> Int -> [Int]
 mute xs y z = take y xs ++ [z] ++ reverse(take ((length xs) - (y + 1)) (reverse xs))
 
+mutWrap :: [[Int]] -> Float -> Int -> Int -> IO [[Int]]
 mutWrap pop mutchan size chromosomes = do mutlist <- floatList size
                                           positionlist <- posList size chromosomes
                                           newellist <- genList size
@@ -95,6 +105,19 @@ cross xs ys z = (take z xs ++ (reverse(take ((length ys) - z) (reverse ys))), ta
 crossOut :: ([Int],[Int]) -> Int -> [Int]
 crossOut (xs,ys) z = if z == 0 then xs else ys
 
+crossWrap :: [[Int]] -> Float -> Int -> [Int] -> [Float] -> [[Int]]
+crossWrap [] _ _ _ _ = []
+crossWrap _ _ _ [] _ = []
+crossWrap _ _ _ _ [] = []
+crossWrap (p1:p2:pt) crosschan size (c:ct) (cc:cct) | cc < crosschan = do [crossOut (cross p1 p2 c) 0] ++ [crossOut (cross p1 p2 c) 1] ++ crossWrap pt crosschan size ct cct
+                                                    | otherwise = [p1] ++ [p2] ++ crossWrap pt crosschan size ct cct
+
+crossDWrap :: [[Int]] -> Float -> Int -> Int -> IO [[Int]]
+crossDWrap pop crosschan chromosomes size = do let halfsize = size `div` 2
+                                               cutList <- posList halfsize chromosomes
+                                               crosschanList <- floatList halfsize
+                                               let x = crossWrap pop crosschan size cutList crosschanList
+                                               return x
 ------------------------------------------------------------------------------------------------------------------------
 -- | Pojedynek na przystosowanie dwoch osobnikow
 -- = Funkcja porownuje dwoch osobnikow pod wzgledem ich przystosowania (zblizenia do podanego wzorca)
@@ -103,9 +126,9 @@ selection :: [Int] -> [Int] -> [Int] -> [Int]
 selection [] [] [] = []
 selection x y z = if (fitness x y) < (fitness x z) then y else z
 
+selectWrap :: [Int] -> [[Int]] -> Int -> IO [[Int]]
 selectWrap word pop size = do first_fighters <- tourList size
                               second_fighters <- tourList size
-                              putStrLn $ show first_fighters
                               let x = [selection word (pop !! a) (pop !! b) | (a,b) <- zip first_fighters second_fighters]
                               return x
 
