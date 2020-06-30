@@ -1,22 +1,32 @@
-module Main where
+{- |
+Module      : Main
+Description : Algorithm searches exact sentence starting from generated list of ASCII values, and is based on genetic algorithm
+Copyright   : Czech D., 2020
+              Partyka J., 2020
+License     : BSD-3
+Maintainer  : jakubpart@gmail.com
+Stability   : quite stable
+Portability : POSIX
+-}
+
+module Main (main, genalg) where
 
 import Lib
-import System.Random
 
 main :: IO ()
 main = do
-    putStrLn "Algorytm genetyczny"
-    
-    putStrLn "Podaj slowo docelowe: "
+    putStrLn "Genetic Algorithm"
+    putStrLn "Searched sentence: "
     sWord <- getLine
-    putStrLn "Podaj rozmiar populacji: "
+    putStrLn "Population size (has to be even number): "
     sSize <- getLine
-    putStrLn "Podaj maksymalna liczbe generacji: "
+    putStrLn "Maximum generations: "
     sGen <- getLine
-    putStrLn "Podaj szanse na mutacje: "
-    sMutChan <- getLine
-    putStrLn "Podaj szanse na skrzyzowanie: "
+    putStrLn "Cross chance: "
     sCrossChan <- getLine
+    putStrLn "Mutation chance: "
+    sMutChan <- getLine
+
     
     let size = read sSize :: Int
         gen = read sGen :: Int
@@ -28,29 +38,18 @@ main = do
     pop <- genpop size chromosomes
     let przyst = [fitness word x | x <- pop]
     pop <- genalg 1 word pop mutchan size crosschan chromosomes gen
-    putStrLn $ show $ a2t $ pop !! 1
-    someFunc
+    print (a2t $ head pop)
+    putStrLn "The end"
 
---TODO: sama funkcja algorytmu genetycznego (sklejenie powyższych funkcji tak, by było wykonywane)
---OGÓLNY TEMPLATE
---generuj
---oceń
---while przystosowanie != 1.0 or iter_index >=1000 do:
---  print (iter_index, przystosowanie)
---  selekcja
---  krzyżowanie
---  mutacja
---return
---skonwertuj z ASCII na tekst
-
+-- | Body of genetic algorithm. For each iteration prints tuple = (iteration, sum of differences in pop, example ind).
+--  If one of the conditions is fullfiled recursion stops and returns population.
 genalg :: Int -> [Int] -> [[Int]] -> Float -> Int -> Float -> Int -> Int -> IO [[Int]]
 genalg i word pop mutchan size crosschan chromosomes gen =
   if sum [fitness word x | x <- pop] == 0 || i>gen
   then return pop
-  else do putStrLn $ show (sum [fitness word x | x <- pop])
+  else do print (i, sum [fitness word x | x <- pop], a2t $ head pop)
           pop <- mutWrap pop mutchan size chromosomes
           pop <- selectWrap word pop size
           pop <- crossDWrap pop crosschan chromosomes size
---          return pop
           genalg (i+1) word pop mutchan size crosschan chromosomes gen
           
