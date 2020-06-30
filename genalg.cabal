@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4fb18a5e6c5f2443266c6302040f0833481a41faadb42e9292314c6113191c10
+-- hash: 80ffc59a16f10175e6a38ee5ef4931209fae707ed54d5c14765e505bd893cc6e
 
 name:           genalg
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/genalg#readme>
-homepage:       https://github.com/githubuser/genalg#readme
-bug-reports:    https://github.com/githubuser/genalg/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2020 Author name here
+homepage:       https://github.com/yetanotherautist/genalg#readme
+bug-reports:    https://github.com/yetanotherautist/genalg/issues
+author:         Partyka Jakub
+maintainer:     jakubpart@gmail.com
+copyright:      2020 Partyka Jakub
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/genalg
+  location: https://github.com/yetanotherautist/genalg
 
 library
   exposed-modules:
@@ -33,7 +33,9 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
+    , hspec
     , random
   default-language: Haskell2010
 
@@ -45,8 +47,10 @@ executable genalg-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , genalg
+    , hspec
     , random
   default-language: Haskell2010
 
@@ -59,7 +63,9 @@ test-suite genalg-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , genalg
+    , hspec
     , random
   default-language: Haskell2010
